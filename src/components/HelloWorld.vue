@@ -1,114 +1,130 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+  <div class="grid">
+    <div class="grid-item">
+      <div class="card">
+        <h2 class="card-title">Donunt Chart</h2>
+
+        <div class="chart-container">
+          <d3-donut :value="parserData"/>
+        </div>
+        <div class="controls">
+          <div v-for="item,key in paises" :key="key">
+            <label for>{{item.name}}</label>
+            <input type="checkbox" v-model="item.active">
+            <input type="range" min="0" max="100" step="1" v-model="paises[key].value">
+          </div>
+
+          <hr>
+
+          <button @click="addPaises">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <h2 class="card-title">Line Chart</h2>
+
+        <div class="chart-container">
+          <d3-line/>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <h2 class="card-title">Bar Horizontal Chart</h2>
+
+        <div class="chart-container"></div>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <h2 class="card-title">Bar Vertical Chart</h2>
+
+        <div class="chart-container" :value="[25,10,22,33,15]"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import D3Donut from "./D3Donut.vue";
+import D3Line from "./D3Line.vue";
+import * as d3 from "d3";
+
 export default {
   name: "HelloWorld",
+  components: {
+    D3Donut,
+    D3Line
+  },
   props: {
     msg: String
+  },
+  data() {
+    return {
+      paises: [
+        { name: "USA", value: 95, active: true },
+        { name: "UK", value: 20, active: true },
+        { name: "Canada", value: 30, active: true },
+        { name: "Mexico", value: 10, active: true }
+      ]
+    };
+  },
+  computed: {
+    parserData() {
+      let d = this.paises.filter(i => {
+        return i.active;
+      });
+
+      return d.map(i => {
+        i.value = parseInt(i.value);
+        return i;
+      });
+    }
+  },
+  methods: {
+    addPaises() {
+      let arrayPaises = ["Croacia", "Dinamarca", "Italia", "España", "Francia"];
+
+      let val = Math.floor(Math.random() * (100 - 1)) + 1;
+      let indexPaises = Math.floor(Math.random() * (5 - 0)) + 0;
+
+      console.log(indexPaises);
+
+      this.paises.push({
+        name: arrayPaises[indexPaises],
+        value: val,
+        active: true
+      });
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  width: 100%;
+  min-height: 100vh;
+  gap: 1em;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em 0.75em;
+  box-shadow: 0 0 0.25em 0.25em rgba(0, 0, 0, 0.05);
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+.card > .card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-family: sans-serif;
 }
 </style>
