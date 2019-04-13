@@ -35,7 +35,9 @@
       <div class="card">
         <h2 class="card-title">Bar Horizontal Chart</h2>
 
-        <div class="chart-container"></div>
+        <div class="chart-container">
+          <d3-bar-vertical :value="parserData" keyLabel="nombre"/>
+        </div>
       </div>
     </div>
 
@@ -52,13 +54,15 @@
 <script>
 import D3Donut from "./D3Donut.vue";
 import D3Line from "./D3Line.vue";
+import D3BarVertical from "./D3BarVertical.vue";
 import * as d3 from "d3";
 
 export default {
   name: "HelloWorld",
   components: {
     D3Donut,
-    D3Line
+    D3Line,
+    D3BarVertical
   },
   props: {
     msg: String
