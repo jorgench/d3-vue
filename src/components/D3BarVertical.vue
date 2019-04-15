@@ -19,18 +19,18 @@ export default {
     },
     keyLabel: {
       type: String,
-      default: "label"
+      default: "name"
     }
   },
   data() {
     return {
       width: 960,
       height: 450,
-      svg: {},
+      g: {},
       margin: {
-        top: 15,
+        top: 30,
         right: 15,
-        bottom: 15,
+        bottom: 30,
         left: 60
       }
     };
@@ -46,85 +46,118 @@ export default {
       return this.height - this.margin.top - this.margin.bottom;
     }
   },
-  created() {
+  mounted() {
     this.drawChart();
   },
   methods: {
     drawChart() {
       self = this;
 
-      this.svg = d3.select(self.$refs.svg);
+      this.g = d3.select(self.$refs.svg);
 
-      let g = this.svg
+      this.y = d3
+        .scaleBand()
+        .rangeRound([self.realH, 0])
+        .padding(0.1);
+
+      this.x = d3.scaleLinear().range([0, self.realW]);
+
+      this.g
         .append("g")
+        .attr("class", "global")
         .attr(
           "transform",
-          "translate(" + this.margin.left + "," + this.margin.top + ")"
-        );
+          "translate(" + self.margin.left + "," + self.margin.top + ")"
+        )
+        .selectAll("rect.bar");
 
-      var xScale = d3
-        .scaleLinear()
-        .range([0, this.realW])
-        .domain([
-          0,
-          d3.max(this.value, function(d) {
-            return d[self.keyValue];
-          })
-        ]);
-
-      var yScale = d3
-        .scaleOrdinal()
-        .rangeRoundBands([this.realH, 0], 0.1)
-        .domain(
-          this.value.map(function(d) {
-            return d[self.keyLabel];
-          })
-        );
-
-      var yAxis = d3.svg
-        .axis()
-        .scale(yScale)
-        .tickSize(0)
-        .orient("left");
-      var gy = g
+      this.g
         .append("g")
-        .attr("class", "y-axis")
-        .call(yAxis);
+        .attr("class", "x axis")
+        .attr(
+          "transform",
+          "translate(" +
+            this.margin.left +
+            ", " +
+            (this.height - this.margin.bottom) +
+            ")"
+        );
 
-      var bars = g
-        .selectAll(".bar")
-        .data(this.value)
+      this.g
+        .append("g")
+        .attr("class", "y axis")
+        .attr(
+          "transform",
+          "translate(" + this.margin.left + ", " + this.margin.top + ")"
+        );
+
+      this.updateCharts();
+    },
+    updateCharts() {
+      self = this;
+
+      this.x.domain([
+        0,
+        d3.max(this.value, function(d) {
+          return d[self.keyValue];
+        })
+      ]);
+
+      this.y.domain(
+        this.value.map(function(d) {
+          return d[self.keyLabel] ? d[self.keyLabel] : "";
+        })
+      );
+
+      let xAxis = this.g.select(".x.axis").call(d3.axisBottom(this.x));
+      let yAxis = this.g
+        .select(".y.axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(this.y));
+
+      /* barras */
+      let bars = d3
+        .select("g.global")
+        .selectAll("rect.bar")
+        .data(self.value);
+
+      //remove
+      bars.exit().remove();
+
+      //enter
+      let r_enter = bars
         .enter()
-        .append(g);
-
-      bars
         .append("rect")
         .attr("class", "bar")
+        .attr("height", self.y.bandwidth())
+        .attr("width", 0)
         .attr("y", function(d) {
-          return yScale(d[self.keyLabel]);
-        })
-        .attr("height", yScale.rangeBand())
-        .attr("x", 0)
-        .attr("width", function(d) {
-          return xScale(d[self.keyValue]);
+          return self.y(d[self.keyLabel]);
         });
 
+      //enter + update
       bars
-        .append("text")
-        .attr("class", "label")
+        .merge(r_enter)
+        .transition()
+        .duration(1000)
+        .attr("width", function(d) {
+          return self.x(d[self.keyValue]);
+        })
+        .attr("class", "bar")
         .attr("y", function(d) {
-          return yScale(d[self.keyLabel]) + 3;
-        });
-
-      /*bars.append('rect').attr('class','bar').attr("y",function(d) {
-        return yScale(d[self.keyLabel]) + yScale.rangeBand() / 2 + 4
-      }).attr('x', function(d) {
-        return xScale(d[self.keyValue]) + 3;
-      }).text(function(d) {
-        return d[this.keyValue]
-      });*/
-    },
-    updateCharts() {}
+          return self.y(d[self.keyLabel]);
+        })
+        .attr("height", self.y.bandwidth())
+        .attr("fill", "steelblue");
+    }
+  },
+  watch: {
+    value(oldValue, newValue) {
+      if (oldValue != newValue) {
+        this.updateCharts();
+      }
+    }
   }
 };
 </script>

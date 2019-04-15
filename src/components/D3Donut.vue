@@ -90,7 +90,7 @@ export default {
       return arc(b);
     },
     drawChart() {
-      self = this;
+      let self = this;
 
       this.g = d3.select(self.$refs.svg);
 
@@ -143,8 +143,6 @@ export default {
         .each(function(d, i) {
           this._current = i;
         });
-
-      console.log("Update Paths");
 
       /* Pie Polylines */
     },

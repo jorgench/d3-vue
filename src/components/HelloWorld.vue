@@ -36,7 +36,7 @@
         <h2 class="card-title">Bar Horizontal Chart</h2>
 
         <div class="chart-container">
-          <d3-bar-vertical :value="parserData" keyLabel="nombre"/>
+          <d3-bar-vertical :value="parserData" keyLabel="name"/>
         </div>
       </div>
     </div>
