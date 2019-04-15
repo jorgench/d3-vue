@@ -20,18 +20,28 @@ export default {
     keyLabel: {
       type: String,
       default: "name"
+    },
+    width: {
+      type: Number,
+      default: 960
+    },
+    height: {
+      type: Number,
+      default: 450
+    },
+    fill: {
+      type: String,
+      default: "#0E73CA"
     }
   },
   data() {
     return {
-      width: 960,
-      height: 450,
       g: {},
       margin: {
         top: 30,
         right: 15,
         bottom: 30,
-        left: 60
+        left: 130
       }
     };
   },
@@ -81,7 +91,8 @@ export default {
             ", " +
             (this.height - this.margin.bottom) +
             ")"
-        );
+        )
+        .style("font-size", 24);
 
       this.g
         .append("g")
@@ -89,7 +100,8 @@ export default {
         .attr(
           "transform",
           "translate(" + this.margin.left + ", " + this.margin.top + ")"
-        );
+        )
+        .style("font-size", 24);
 
       this.updateCharts();
     },
@@ -122,19 +134,35 @@ export default {
         .selectAll("rect.bar")
         .data(self.value);
 
+      let texts = d3
+        .select("g.global")
+        .selectAll("text.field-text")
+        .data(self.value);
+
       //remove
       bars.exit().remove();
+      texts.exit().remove();
 
       //enter
       let r_enter = bars
         .enter()
+        .append("g")
         .append("rect")
         .attr("class", "bar")
-        .attr("height", self.y.bandwidth())
+        .attr("height", self.y.bandwidth(), 40)
         .attr("width", 0)
         .attr("y", function(d) {
           return self.y(d[self.keyLabel]);
         });
+
+      let t_enter = texts
+        .enter()
+        .append("text")
+        .attr("class", "field-text")
+        .attr(
+          "transform",
+          "translate(" + this.margin.right + "," + self.y.bandwidth() / 2 + ")"
+        );
 
       //enter + update
       bars
@@ -149,7 +177,33 @@ export default {
           return self.y(d[self.keyLabel]);
         })
         .attr("height", self.y.bandwidth())
-        .attr("fill", "steelblue");
+        .attr("fill", this.fill);
+
+      texts
+        .merge(t_enter)
+        .transition()
+        .duration(1000)
+        .attr("class", "field-text")
+        .attr("y", function(d) {
+          return self.y(d[self.keyLabel]);
+        })
+        .attr(
+          "transform",
+          "translate(" +
+            this.margin.right +
+            "," +
+            (self.y.bandwidth() / 2 + 10) +
+            ")"
+        )
+        .attr("font-size", "24")
+        .text(function(d) {
+          return d[self.keyValue];
+        });
+
+      /* interactividad */
+      this.g.selectAll("rect.bar").on("click", function(d, i) {
+        self.$emit("select", d, i);
+      });
     }
   },
   watch: {

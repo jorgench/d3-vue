@@ -36,7 +36,7 @@
         <h2 class="card-title">Bar Horizontal Chart</h2>
 
         <div class="chart-container">
-          <d3-bar-vertical :value="parserData" keyLabel="name"/>
+          <d3-bar-vertical :value="parserData" keyLabel="name" @select="select"/>
         </div>
       </div>
     </div>
@@ -96,13 +96,14 @@ export default {
       let val = Math.floor(Math.random() * (100 - 1)) + 1;
       let indexPaises = Math.floor(Math.random() * (5 - 0)) + 0;
 
-      console.log(indexPaises);
-
       this.paises.push({
         name: arrayPaises[indexPaises],
         value: val,
         active: true
       });
+    },
+    select(d, i) {
+      console.log("d: ", d, " : ", i);
     }
   }
 };
