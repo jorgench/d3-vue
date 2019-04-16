@@ -130,11 +130,13 @@ export default {
 
       /* barras */
       let bars = d3
+        .select(this.$refs.svg)
         .select("g.global")
         .selectAll("rect.bar")
         .data(self.value);
 
       let texts = d3
+        .select(this.$refs.svg)
         .select("g.global")
         .selectAll("text.field-text")
         .data(self.value);

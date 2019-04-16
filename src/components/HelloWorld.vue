@@ -25,9 +25,7 @@
       <div class="card">
         <h2 class="card-title">Line Chart</h2>
 
-        <div class="chart-container">
-          <d3-line/>
-        </div>
+        <div class="chart-container"></div>
       </div>
     </div>
 
@@ -45,7 +43,7 @@
       <div class="card">
         <h2 class="card-title">Bar Vertical Chart</h2>
 
-        <div class="chart-container" :value="[25,10,22,33,15]"></div>
+        <div class="chart-container"></div>
       </div>
     </div>
   </div>
