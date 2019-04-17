@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg ref="svg" :viewBox="viewBox"></svg>
+    <svg ref="svg" :viewBox="viewBox" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
 </template>
 <script>

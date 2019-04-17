@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg ref="svg" :viewBox="viewBox">
+    <svg ref="svg" :viewBox="viewBox" preserveAspectRatio="xMidYMid meet">
       <g class="text-group" :transform="'translate(' + (width/2) + ',' + (height/2) + ')'">
         <text
           text-anchor="middle"
