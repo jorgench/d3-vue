@@ -19,7 +19,7 @@ export default {
     },
     keyLabel: {
       type: String,
-      default: "name"
+      default: "label"
     },
     width: {
       type: Number,

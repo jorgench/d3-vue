@@ -14,81 +14,156 @@ export default {
       default() {
         return [];
       }
+    },
+    keyValue: {
+      type: String,
+      default: "value"
+    },
+    keyLabel: {
+      type: String,
+      default: "label"
+    },
+    width: {
+      type: Number,
+      default: 960
+    },
+    height: {
+      type: Number,
+      default: 450
     }
   },
   data() {
     return {
-      height: 450,
-      width: 960,
-      padding: 5
+      g: {},
+      margin: {
+        top: 30,
+        right: 15,
+        bottom: 30,
+        left: 130
+      }
     };
   },
   computed: {
     viewBox() {
       return "0 0 " + this.width + " " + this.height;
     },
-    countValue() {
-      return this.value.length;
+    realW() {
+      return this.width - this.margin.left - this.margin.right;
+    },
+    realH() {
+      return this.height - this.margin.top - this.margin.bottom;
     }
   },
-  created() {},
   mounted() {
-    var xScale = d3
-      .scaleLinear()
-      .domain([0, this.countValue - 1])
-      .range([0, this.width - this.padding * 2]);
+    this.drawChart();
+  },
+  methods: {
+    drawChart() {
+      self = this;
 
-    var yScale = d3
-      .scaleLinear()
-      .domain([0, 1])
-      .range([0, this.height - this.padding * 2]);
+      this.g = d3.select(self.$refs.svg);
 
-    var line = d3
-      .line()
-      .x(function(d, i) {
-        return xScale(i);
-      })
-      .y(function(d, i) {
-        return yScale(d.y);
-      })
-      .curve(d3.curveMonotoneX);
+      this.x = d3
+        .scaleBand()
+        .rangeRound([0, self.realW])
+        .padding(0.1);
 
-    let svg = d3.select(this.$refs.svg);
+      this.y = d3.scaleLinear().range([self.realH, 0]);
 
-    svg
-      .append("g")
-      .attr("class", "x-axis")
-      .attr(
-        "transform",
-        "translate(0," + (this.height - this.padding * 5) + ")"
-      )
-      .call(d3.axisBottom(xScale));
+      this.g
+        .append("g")
+        .attr("class", "global")
+        .attr(
+          "transform",
+          "translate(" + self.margin.left + "," + self.margin.top + ")"
+        );
 
-    svg
-      .append("g")
-      .attr("class", "y-axis")
-      .attr("transform", "translate(" + this.padding * 5 + ",0)")
-      .call(d3.axisLeft(yScale));
+      this.g
+        .append("g")
+        .attr("class", "x axis")
+        .attr(
+          "transform",
+          "translate(" +
+            this.margin.left +
+            "," +
+            (this.height - this.margin.bottom) +
+            ")"
+        )
+        .style("font-size", 24);
 
-    svg
-      .append("path")
-      .datum(this.value)
-      .attr("class", "line")
-      .attr("d", line);
+      this.g
+        .append("g")
+        .attr("class", "y axis")
+        .attr(
+          "transform",
+          "translate(" + this.margin.left + "," + this.margin.top + ")"
+        )
+        .style("font-size", 24);
 
-    svg
-      .selectAll(".dot")
-      .data(this.value)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("cx", function(d, i) {
-        return xScale(i);
-      })
-      .attr("cy", function(d) {
-        return yScale(d.y);
-      })
-      .attr("r", 5);
+      this.g
+        .select("g.global")
+        .append("path")
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5);
+
+      this.updateCharts();
+    },
+    updateCharts() {
+      self = this;
+
+      this.x.domain(
+        this.value.map(function(d) {
+          return d[self.keyLabel] ? d[self.keyLabel] : !"";
+        })
+      );
+
+      this.y.domain([
+        0,
+        d3.max(this.value, function(d) {
+          return d[self.keyValue];
+        })
+      ]);
+
+      let xAxis = this.g
+        .select(".x.axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisBottom(this.x));
+      let yAxis = this.g
+        .select(".y.axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(this.y));
+
+      let line = d3
+        .line()
+        .x(function(d, i) {
+          let returnX = self.x(d[self.keyLabel]);
+          console.log("X retorna: ", returnX);
+          return returnX + self.x.bandwidth() / 2;
+        })
+        .y(function(d, i) {
+          let returnY = self.y(d[self.keyValue]);
+          console.log("Y retorna: ", returnY);
+          return returnY;
+        });
+
+      this.g
+        .select("path.line")
+        .datum(self.value)
+        .transition()
+        .duration(1000)
+        .attr("d", line);
+    }
+  },
+  watch: {
+    value(oldValue, newValue) {
+      if (oldValue != newValue) {
+        this.updateCharts();
+      }
+    }
   }
 };
 </script>
