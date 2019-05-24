@@ -108,12 +108,11 @@ export default {
     updateCharts() {
       self = this;
 
-      this.x.domain([
-        0,
-        d3.max(this.value, function(d) {
-          return d[self.keyValue];
-        })
-      ]);
+      self.maxValue = d3.max(this.value, function(d) {
+        return d[self.keyValue];
+      });
+
+      this.x.domain([0, self.maxValue]);
 
       this.y.domain(
         this.value.map(function(d) {
@@ -121,7 +120,16 @@ export default {
         })
       );
 
-      let xAxis = this.g.select(".x.axis").call(d3.axisBottom(this.x));
+      let ticks = self.maxValue < 12 ? self.maxValue : 10;
+
+      let xAxis = this.g.select(".x.axis").call(
+        d3
+          .axisBottom(this.x)
+          .ticks(ticks)
+          .tickFormat(function(d, i) {
+            return d3.format(",.0f")(d, i);
+          })
+      );
       let yAxis = this.g
         .select(".y.axis")
         .transition()
