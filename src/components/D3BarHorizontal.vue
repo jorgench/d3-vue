@@ -120,12 +120,6 @@ export default {
 
       this.y.domain([0, self.maxValue]);
 
-      this.y.tick = {
-        format: function(x) {
-          return x % 1 === 0 ? x : "";
-        }
-      };
-
       this.x.domain(
         this.value.map(function(d) {
           return d[self.keyLabel] ? d[self.keyLabel] : "";

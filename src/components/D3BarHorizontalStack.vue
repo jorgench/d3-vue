@@ -110,6 +110,169 @@ export default {
           "translate(" + this.margin.left + "," + this.margin.top + ")"
         )
         .style("font-size", 24);
+
+      this.updateCharts();
+    },
+    updateCharts() {
+      self = this;
+
+      self.maxValue = d3.max(this.value, function(d) {
+        let a = 0;
+        a += d3.sum(self.keysValue, k => +d[k]);
+        return a;
+      });
+
+      this.y.domain([0, self.maxValue]);
+
+      let xDominios = this.value.map(function(d, i) {
+        let temp = d[self.keyLabel] ? d[self.keyLabel] : i;
+        console.log("X dominio", temp);
+        return temp;
+      });
+
+      this.x.domain(xDominios);
+
+      this.g
+        .select(".x.axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisBottom(this.x));
+
+      this.g
+        .select(".y.axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(this.y));
+
+      if (this.barsBackground) {
+        let backgroundBars = d3
+          .select(this.$refs.svg)
+          .select("g.global")
+          .selectAll("rect.bar-background")
+          .data(self.value);
+
+        backgroundBars.exit().remove();
+
+        let background_bars = backgroundBars
+          .enter()
+          .append("g")
+          .append("rect")
+          .attr("class", "bar-background")
+          .attr("height", 0)
+          .attr("width", self.x.bandwidth(), 40)
+          .attr("x", function(d) {
+            return self.x(d[self.keyLabel]);
+          });
+
+        backgroundBars
+          .merge(background_bars)
+          .attr("y", function() {
+            if (this.getAttribute("y")) {
+              return this.getAttribute("y");
+            } else {
+              return self.realH - self.y(self.maxValue);
+            }
+          })
+          .attr("height", function() {
+            if (this.getAttribute("height")) {
+              return this.getAttribute("height");
+            }
+            return self.realH - self.y(self.maxValue);
+          })
+          .attr("x", function(d) {
+            if (this.getAttribute("x")) {
+              return this.getAttribute("x");
+            }
+            return self.x(d[self.keyLabel]);
+          })
+          .transition()
+          .duration(1000)
+          .ease(d3.easePolyOut)
+          .attr("height", function() {
+            return self.realH - self.y(self.maxValue);
+          })
+          .attr("width", function() {
+            return self.x(self.maxValue);
+          })
+          .attr("class", "bar-background")
+          .attr("x", function(d) {
+            return self.x(d[self.keyLabel]);
+          })
+          .attr("y", function() {
+            return self.y(self.maxValue);
+          })
+          .attr("width", self.x.bandwidth())
+          .attr("fill", self.fill)
+          .style("opacity", "0.2");
+      }
+
+      let staked = d3.stack().keys(self.keysValue)(self.value);
+
+      /* group */
+      let groups = this.g.selectAll("g.layer").data(staked, function(d, i) {
+        return d.key;
+      });
+
+      groups.exit().remove();
+
+      let colors = ["#e71d36", "#eac435", "#2ab7ca", "#e4572e", "#042a2b"];
+
+      groups
+        .enter()
+        .append("g")
+        .classed("layer", true)
+        .attr("fill", function(d) {
+          return colors[arguments[1]];
+        })
+        .attr(
+          "transform",
+          "translate(" + self.margin.left + "," + self.margin.top + ")"
+        );
+
+      /* barras */
+      let bars = d3
+        .selectAll("g.layer")
+        .selectAll("rect")
+        .data(
+          function(d, i, j) {
+            return d;
+          },
+          function(e) {
+            return e.data[self.keyLabel];
+          }
+        );
+
+      bars.exit().remove();
+
+      bars
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("width", self.x.bandwidth())
+        .merge(bars)
+        .transition()
+        .duration(1000)
+        .attr("x", function(d, i) {
+          return self.x(xDominios[i]);
+        })
+        .attr("y", function(d) {
+          return self.y(d[1]);
+          //return 0;
+        })
+        .attr("height", function(d) {
+          return self.y(d[0]) - self.y(d[1]);
+        });
+
+      this.g.selectAll("rect.bar").on("click", function(d, i) {
+        self.$emit("select", d, i);
+      });
+    }
+  },
+  watch: {
+    value(oldValue, newValue) {
+      if (oldValue != newValue) {
+        this.updateCharts();
+      }
     }
   }
 };

@@ -50,6 +50,41 @@
         </div>
       </div>
     </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <div class="card-title">Bar Vertical Chart Stack</div>
+        <div class="chart-container">
+          <d3-bar-horizontal-stack
+            :value="parserData"
+            keyLabel="name"
+            :keysValue="['value','value2','value3']"
+          ></d3-bar-horizontal-stack>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <div class="card-container">
+          <div class="controls">
+            <div v-for="item,key in paises" :key="key">
+              <label for>{{item.name}}</label>
+              <input type="checkbox" v-model="item.active">
+              <input type="range" min="0" max="100" step="1" v-model="paises[key].value2">
+            </div>
+          </div>
+          <hr>
+          <div class="controls">
+            <div v-for="item,key in paises" :key="key">
+              <label for>{{item.name}}</label>
+              <input type="checkbox" v-model="item.active">
+              <input type="range" min="0" max="100" step="1" v-model="paises[key].value3">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,6 +93,7 @@ import D3Donut from "./D3Donut.vue";
 import D3Line from "./D3Line.vue";
 import D3BarVertical from "./D3BarVertical.vue";
 import D3BarHorizontal from "./D3BarHorizontal.vue";
+import D3BarHorizontalStack from "./D3BarHorizontalStack.vue";
 import * as d3 from "d3";
 
 export default {
@@ -66,7 +102,8 @@ export default {
     D3Donut,
     D3Line,
     D3BarVertical,
-    D3BarHorizontal
+    D3BarHorizontal,
+    D3BarHorizontalStack
   },
   props: {
     msg: String
@@ -74,10 +111,10 @@ export default {
   data() {
     return {
       paises: [
-        { name: "USA", value: 95, active: true },
-        { name: "UK", value: 20, active: true },
-        { name: "Canada", value: 30, active: true },
-        { name: "Mexico", value: 10, active: true }
+        { name: "USA", value: 95, value2: 120, value3: 14, active: true },
+        { name: "UK", value: 20, value2: 450, value3: 52, active: true },
+        { name: "Canada", value: 30, value2: 142, value3: 68, active: true },
+        { name: "Mexico", value: 10, value2: 240, value3: 100, active: true }
       ]
     };
   },
@@ -89,6 +126,8 @@ export default {
 
       return d.map(i => {
         i.value = parseInt(i.value);
+        i.value2 = parseInt(i.value2);
+        i.value3 = parseInt(i.value3);
         return i;
       });
     }
@@ -98,11 +137,15 @@ export default {
       let arrayPaises = ["Croacia", "Dinamarca", "Italia", "España", "Francia"];
 
       let val = Math.floor(Math.random() * (100 - 1)) + 1;
+      let val2 = Math.floor(Math.random() * (120 - 1)) + 1;
+      let val3 = Math.floor(Math.random() * (90 - 1)) + 1;
       let indexPaises = Math.floor(Math.random() * (5 - 0)) + 0;
 
       this.paises.push({
         name: arrayPaises[indexPaises],
         value: val,
+        value2: val2,
+        value3: val3,
         active: true
       });
     },
