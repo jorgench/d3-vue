@@ -1,7 +1,6 @@
 <template>
   <div>
     <svg ref="svg" :viewBox="viewBox" perserveAspectRatio="xMidYMid meet"></svg>
-    <div class="d3container"></div>
   </div>
 </template>
 
@@ -9,7 +8,7 @@
 import * as d3 from "d3";
 
 export default {
-  name: "D3BarHorizontalStack",
+  name: "D3BarVerticalStack",
   props: {
     value: {
       type: Array,
@@ -38,10 +37,6 @@ export default {
     fill: {
       type: String,
       default: "#0E73CA"
-    },
-    barsBackground: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
@@ -75,12 +70,12 @@ export default {
 
       this.g = d3.select(self.$refs.svg);
 
-      this.x = d3
+      this.y = d3
         .scaleBand()
-        .rangeRound([0, self.realW])
+        .rangeRound([self.realH, 0])
         .padding(0.1);
 
-      this.y = d3.scaleLinear().range([self.realH, 0]);
+      this.x = d3.scaleLinear().range([0, self.realW]);
 
       this.g
         .append("g")
@@ -98,7 +93,7 @@ export default {
           "transform",
           "translate(" +
             this.margin.left +
-            "," +
+            ", " +
             (this.height - this.margin.bottom) +
             ")"
         )
@@ -109,7 +104,7 @@ export default {
         .attr("class", "y axis")
         .attr(
           "transform",
-          "translate(" + this.margin.left + "," + this.margin.top + ")"
+          "translate(" + this.margin.left + ", " + this.margin.top + ")"
         )
         .style("font-size", 24);
 
@@ -124,88 +119,31 @@ export default {
         return a;
       });
 
-      this.y.domain([0, self.maxValue]);
+      this.x.domain([0, self.maxValue]);
 
-      let xDominios = this.value.map(function(d, i) {
+      let yDominios = this.value.map(function(d, i) {
         let temp = d[self.keyLabel] ? d[self.keyLabel] : i;
         return temp;
       });
 
-      this.x.domain(xDominios);
+      this.y.domain(yDominios);
 
-      this.g
-        .select(".x.axis")
-        .transition()
-        .duration(1000)
-        .call(d3.axisBottom(this.x));
+      let ticks = self.maxValue < 12 ? self.maxValue : 10;
+
+      this.g.select(".x.axis").call(
+        d3
+          .axisBottom(this.x)
+          .ticks(ticks)
+          .tickFormat(function(d, i) {
+            return d3.format(",.0f")(d, i);
+          })
+      );
 
       this.g
         .select(".y.axis")
         .transition()
         .duration(1000)
         .call(d3.axisLeft(this.y));
-
-      if (this.barsBackground) {
-        let backgroundBars = d3
-          .select(this.$refs.svg)
-          .select("g.global")
-          .selectAll("rect.bar-background")
-          .data(self.value);
-
-        backgroundBars.exit().remove();
-
-        let background_bars = backgroundBars
-          .enter()
-          .append("g")
-          .append("rect")
-          .attr("class", "bar-background")
-          .attr("height", 0)
-          .attr("width", self.x.bandwidth(), 40)
-          .attr("x", function(d) {
-            return self.x(d[self.keyLabel]);
-          });
-
-        backgroundBars
-          .merge(background_bars)
-          .attr("y", function() {
-            if (this.getAttribute("y")) {
-              return this.getAttribute("y");
-            } else {
-              return self.realH - self.y(self.maxValue);
-            }
-          })
-          .attr("height", function() {
-            if (this.getAttribute("height")) {
-              return this.getAttribute("height");
-            }
-            return self.realH - self.y(self.maxValue);
-          })
-          .attr("x", function(d) {
-            if (this.getAttribute("x")) {
-              return this.getAttribute("x");
-            }
-            return self.x(d[self.keyLabel]);
-          })
-          .transition()
-          .duration(1000)
-          .ease(d3.easePolyOut)
-          .attr("height", function() {
-            return self.realH - self.y(self.maxValue);
-          })
-          .attr("width", function() {
-            return self.x(self.maxValue);
-          })
-          .attr("class", "bar-background")
-          .attr("x", function(d) {
-            return self.x(d[self.keyLabel]);
-          })
-          .attr("y", function() {
-            return self.y(self.maxValue);
-          })
-          .attr("width", self.x.bandwidth())
-          .attr("fill", self.fill)
-          .style("opacity", "0.2");
-      }
 
       let staked = d3.stack().keys(self.keysValue)(self.value);
 
@@ -215,7 +153,6 @@ export default {
       });
 
       groups.exit().remove();
-
       let colors = ["#e71d36", "#eac435", "#2ab7ca", "#e4572e", "#042a2b"];
 
       groups
@@ -227,10 +164,10 @@ export default {
         })
         .attr(
           "transform",
-          "translate(" + self.margin.left + "," + self.margin.top + ")"
+          "translate(" + self.margin.left + "," + this.margin.right + ")"
         );
 
-      /* barras */
+      /* Bars */
       let bars = this.g
         .selectAll("g.layer")
         .selectAll("rect")
@@ -250,43 +187,71 @@ export default {
         .append("rect")
         .attr("class", "bar")
         .merge(bars)
-        .attr("height", function() {
-          if (this.getAttribute("height")) {
-            return this.getAttribute("height");
+        .attr("width", function() {
+          if (this.getAttribute("width")) {
+            return this.getAttribute("width");
           }
           return 0;
         })
-        .attr("width", self.x.bandwidth())
-        .attr("x", function(d, i) {
-          if (this.getAttribute("x")) {
-            return this.getAttribute("x");
-          }
-          return self.x(xDominios[i]);
-        })
-        .attr("y", function(d, i) {
-          if (this.getAttribute("y")) {
-            return this.getAttribute("y");
-          } else {
-            return self.realH - self.y(self.maxValue);
-          }
-        })
         .transition()
         .duration(1000)
-        .attr("x", function(d, i) {
-          return self.x(xDominios[i]);
+        .attr("y", function(d, i) {
+          return self.y(yDominios[i]);
         })
-        .attr("y", function(d) {
-          return self.y(d[1]);
-          //return 0;
+        .attr("x", function(d) {
+          return self.x(d[0]);
         })
-        .attr("width", self.x.bandwidth())
-        .attr("height", function(d) {
-          return self.y(d[0]) - self.y(d[1]);
+        .attr("height", self.y.bandwidth())
+        .attr("width", function(d) {
+          return (self.x(d[0]) - self.x(d[1])) * -1;
         });
+      /*-------*/
 
-      this.g.selectAll("rect.bar").on("click", function(d, i) {
-        self.$emit("select", d, i);
-      });
+      /* Text */
+      let texts = this.g
+        .selectAll("g.layer")
+        .selectAll("text.field-text")
+        .data(
+          function(d, i, j) {
+            return d;
+          },
+          function(e) {
+            return e.data[self.keyLabel];
+          }
+        );
+
+      texts.exit().remove();
+      let serie = 0;
+
+      texts
+        .enter()
+        .append("text")
+        .attr("class", "field-text")
+        .merge(texts)
+        .transition()
+        .duration(1000)
+        .attr("y", function(d, i) {
+          console.log("Funcion de Y", d);
+          return self.y(yDominios[i]);
+        })
+        .attr("x", function(d) {
+          console.log("data x: ", d);
+          return self.x(d[0]);
+        })
+        .attr(
+          "transform",
+          "translate(" +
+            this.margin.right +
+            "," +
+            (self.y.bandwidth() / 2 + 10) +
+            ")"
+        )
+        .attr("fill", "#000")
+        .text(function(d, i) {
+          /*console.log("D text: " + i, self.value[i][self.keysValue[serie]]);
+          serie++;
+          return self.value[i][self.keysValue[serie]];*/
+        });
     }
   },
   watch: {
@@ -298,3 +263,4 @@ export default {
   }
 };
 </script>
+

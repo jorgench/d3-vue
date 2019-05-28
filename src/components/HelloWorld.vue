@@ -85,6 +85,18 @@
         </div>
       </div>
     </div>
+
+    <div class="grid-item">
+      <div class="card">
+        <div class="card-container">
+          <d3-bar-vertical-stack
+            keyLabel="name"
+            :keysValue="['value','value2','value3']"
+            :value="parserData"
+          ></d3-bar-vertical-stack>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -94,7 +106,7 @@ import D3Line from "./D3Line.vue";
 import D3BarVertical from "./D3BarVertical.vue";
 import D3BarHorizontal from "./D3BarHorizontal.vue";
 import D3BarHorizontalStack from "./D3BarHorizontalStack.vue";
-import * as d3 from "d3";
+import D3BarVerticalStack from "./D3BarVerticalStack.vue";
 
 export default {
   name: "HelloWorld",
@@ -103,7 +115,8 @@ export default {
     D3Line,
     D3BarVertical,
     D3BarHorizontal,
-    D3BarHorizontalStack
+    D3BarHorizontalStack,
+    D3BarVerticalStack
   },
   props: {
     msg: String

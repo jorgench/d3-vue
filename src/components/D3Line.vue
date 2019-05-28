@@ -141,12 +141,10 @@ export default {
         .line()
         .x(function(d, i) {
           let returnX = self.x(d[self.keyLabel]);
-          console.log("X retorna: ", returnX);
           return returnX + self.x.bandwidth() / 2;
         })
         .y(function(d, i) {
           let returnY = self.y(d[self.keyValue]);
-          console.log("Y retorna: ", returnY);
           return returnY;
         });
 
