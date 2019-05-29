@@ -32,12 +32,18 @@ export default {
     subtitle: {
       type: String,
       default: "contactos"
+    },
+    width: {
+      type: Number,
+      default: 960
+    },
+    height: {
+      type: Number,
+      default: 450
     }
   },
   data() {
     return {
-      width: 960,
-      height: 450,
       radius: 0,
       thickness: 40,
       paths: [],
