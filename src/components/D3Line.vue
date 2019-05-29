@@ -59,23 +59,23 @@ export default {
   },
   methods: {
     drawChart() {
-      self = this;
+      let this2 = this;
 
-      this.g = d3.select(self.$refs.svg);
+      this.g = d3.select(this2.$refs.svg);
 
       this.x = d3
         .scaleBand()
-        .rangeRound([0, self.realW])
+        .rangeRound([0, this2.realW])
         .padding(0.1);
 
-      this.y = d3.scaleLinear().range([self.realH, 0]);
+      this.y = d3.scaleLinear().range([this2.realH, 0]);
 
       this.g
         .append("g")
         .attr("class", "global")
         .attr(
           "transform",
-          "translate(" + self.margin.left + "," + self.margin.top + ")"
+          "translate(" + this2.margin.left + "," + this2.margin.top + ")"
         );
 
       this.g
@@ -111,18 +111,18 @@ export default {
       this.updateCharts();
     },
     updateCharts() {
-      self = this;
+      let this2 = this;
 
       this.x.domain(
         this.value.map(function(d) {
-          return d[self.keyLabel] ? d[self.keyLabel] : !"";
+          return d[this2.keyLabel] ? d[this2.keyLabel] : !"";
         })
       );
 
       this.y.domain([
         0,
         d3.max(this.value, function(d) {
-          return d[self.keyValue];
+          return d[this2.keyValue];
         })
       ]);
 
@@ -140,17 +140,17 @@ export default {
       let line = d3
         .line()
         .x(function(d, i) {
-          let returnX = self.x(d[self.keyLabel]);
-          return returnX + self.x.bandwidth() / 2;
+          let returnX = this2.x(d[this2.keyLabel]);
+          return returnX + this2.x.bandwidth() / 2;
         })
         .y(function(d, i) {
-          let returnY = self.y(d[self.keyValue]);
+          let returnY = this2.y(d[this2.keyValue]);
           return returnY;
         });
 
       this.g
         .select("path.line")
-        .datum(self.value)
+        .datum(this2.value)
         .transition()
         .duration(1000)
         .attr("d", line);

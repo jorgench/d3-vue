@@ -108,7 +108,7 @@ export default {
       return;
     },
     updateCharts() {
-      var self = this;
+      let self = this;
 
       /*  Pie Slides */
       let p = this.g

@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     drawChart() {
-      var self = this;
+      let self = this;
 
       this.g = d3.select(self.$refs.svg);
 
@@ -116,7 +116,7 @@ export default {
       this.updateCharts();
     },
     updateCharts() {
-      self = this;
+      let self = this;
 
       self.maxValue = d3.max(this.value, function(d) {
         let a = 0;
