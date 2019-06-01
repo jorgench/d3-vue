@@ -143,7 +143,9 @@ export default {
         .select(".y.axis")
         .transition()
         .duration(1000)
-        .call(d3.axisLeft(this.y));
+        .call(d3.axisLeft(this.y))
+        .selectAll("text")
+        .attr("font-size", 20);
 
       let staked = d3.stack().keys(self.keysValue)(self.value);
 

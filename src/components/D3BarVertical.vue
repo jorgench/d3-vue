@@ -100,8 +100,7 @@ export default {
         .attr(
           "transform",
           "translate(" + this.margin.left + ", " + this.margin.top + ")"
-        )
-        .style("font-size", 24);
+        );
 
       this.updateCharts();
     },
@@ -134,7 +133,10 @@ export default {
         .select(".y.axis")
         .transition()
         .duration(1000)
-        .call(d3.axisLeft(this.y));
+        .call(d3.axisLeft(this.y))
+        .selectAll("text")
+        //.attr("transform", "translate(-10,30)rotate(45)")
+        .attr("font-size", 20);
 
       /* barras */
       let bars = d3

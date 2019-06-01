@@ -88,8 +88,7 @@ export default {
             "," +
             (this.height - this.margin.bottom) +
             ")"
-        )
-        .style("font-size", 24);
+        );
 
       this.g
         .append("g")
@@ -107,6 +106,14 @@ export default {
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5);
+
+      this.g
+        .select("g.dots")
+        .attr("class", "dots")
+        .attr(
+          "transform",
+          "translate(" + this.margin.left + ", " + this.margin.top + ")"
+        );
 
       this.updateCharts();
     },
@@ -130,12 +137,16 @@ export default {
         .select(".x.axis")
         .transition()
         .duration(1000)
-        .call(d3.axisBottom(this.x));
+        .call(d3.axisBottom(this.x))
+        .selectAll("text")
+        .attr("font-size", 20);
       let yAxis = this.g
         .select(".y.axis")
         .transition()
         .duration(1000)
-        .call(d3.axisLeft(this.y));
+        .call(d3.axisLeft(this.y))
+        .selectAll("text")
+        .attr("font-size", 15);
 
       let line = d3
         .line()
@@ -154,6 +165,21 @@ export default {
         .transition()
         .duration(1000)
         .attr("d", line);
+
+      this.g
+        .select("g.dots")
+        .selectAll(".dot")
+        .data(this.value)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("cx", function(d, i) {
+          return this2.x(i);
+        })
+        .attr("cy", function(d) {
+          return this2.x(d.y);
+        })
+        .attr("r", 5);
     }
   },
   watch: {

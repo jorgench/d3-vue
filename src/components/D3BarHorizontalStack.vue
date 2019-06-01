@@ -101,8 +101,7 @@ export default {
             "," +
             (this.height - this.margin.bottom) +
             ")"
-        )
-        .style("font-size", 24);
+        );
 
       this.g
         .append("g")
@@ -137,7 +136,9 @@ export default {
         .select(".x.axis")
         .transition()
         .duration(1000)
-        .call(d3.axisBottom(this.x));
+        .call(d3.axisBottom(this.x))
+        .selectAll("text")
+        .attr("font-size", 20);
 
       this.g
         .select(".y.axis")

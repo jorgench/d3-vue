@@ -5,7 +5,7 @@
         <h2 class="card-title">Donunt Chart</h2>
 
         <div class="chart-container">
-          <d3-donut :value="parserData"/>
+          <d3-donut :height="960 " :thickness="90" :value="parserData"/>
         </div>
         <div class="controls">
           <div v-for="item,key in paises" :key="key">

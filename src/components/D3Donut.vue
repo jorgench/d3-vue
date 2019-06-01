@@ -2,12 +2,8 @@
   <div>
     <svg ref="svg" :viewBox="viewBox" preserveAspectRatio="xMidYMid meet">
       <g class="text-group" :transform="'translate(' + (width/2) + ',' + (height/2) + ')'">
-        <text
-          text-anchor="middle"
-          :dy="width / 20"
-          :style="'font-size: ' + width / 10 + 'px'"
-        >{{totalValue}}</text>
-        <text text-anchor="middle" :dy="width / 10">{{subtitle}}</text>
+        <text text-anchor="middle" :dy="width / 20" :font-size=" width / 5">{{totalValue}}</text>
+        <text text-anchor="middle" :font-size="width / 15" :dy="width / 7.5">{{subtitle}}</text>
       </g>
     </svg>
   </div>
@@ -40,12 +36,15 @@ export default {
     height: {
       type: Number,
       default: 450
+    },
+    thickness: {
+      type: Number,
+      default: 40
     }
   },
   data() {
     return {
       radius: 0,
-      thickness: 40,
       paths: [],
       g: {}
     };
