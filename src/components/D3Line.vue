@@ -30,6 +30,14 @@ export default {
     height: {
       type: Number,
       default: 450
+    },
+    dots: {
+      type: Boolean,
+      default: false
+    },
+    text: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -107,13 +115,24 @@ export default {
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5);
 
-      this.g
-        .select("g.dots")
+      if (this.dots) {
+        this.g
+        .append('g')
         .attr("class", "dots")
         .attr(
           "transform",
-          "translate(" + this.margin.left + ", " + this.margin.top + ")"
+          "translate(" + this2.margin.left + "," + this2.margin.top + ")"
         );
+      }
+      if (this.text) {
+        this.g
+        .append('g')
+        .attr("class","leyeds")
+        .attr(
+          "transform",
+          "translate(" + this2.margin.left + "," + this2.margin.top + ")"
+        );
+      }
 
       this.updateCharts();
     },
@@ -130,7 +149,7 @@ export default {
         0,
         d3.max(this.value, function(d) {
           return d[this2.keyValue];
-        })
+        }) + 10
       ]);
 
       let xAxis = this.g
@@ -166,20 +185,98 @@ export default {
         .duration(1000)
         .attr("d", line);
 
-      this.g
+      if (this.dots) {
+        let dots = this.g
         .select("g.dots")
         .selectAll(".dot")
         .data(this.value)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("cx", function(d, i) {
-          return this2.x(i);
-        })
-        .attr("cy", function(d) {
-          return this2.x(d.y);
-        })
-        .attr("r", 5);
+
+        dots.exit().remove()
+
+        let d_enter = dots.enter()
+          .append("circle")
+          .attr("class", "dot")
+        
+
+        dots.merge(d_enter)
+          .attr("r",function() {
+            if (this.getAttribute("r")) {
+              return this.getAttribute("r")
+            } else {
+              return 0;
+            }
+          })
+          .attr("cx", function(d) {
+            if (this.getAttribute("cx")) {
+              return this.getAttribute("cx")
+            } else {
+              return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;;
+            }
+          })
+          .attr("cy", function(d) {
+            if (this.getAttribute("cy")) {
+              return this.getAttribute("cy")
+            } else {
+              return this2.y(d[this2.keyValue]);  
+            }
+          })
+          .transition()
+          .duration(1000)
+          .attr("r", 5)
+          .attr("cx", function(d, i) {
+            return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;
+          })
+          .attr("cy", function(d, i) {
+            return this2.y(d[this2.keyValue]);
+          })
+      }
+
+      if (this.text) {
+
+        let texts = this.g
+          .select("g.leyeds")
+          .selectAll("text")
+          .data(this.value)
+
+        texts.exit().remove()
+
+        let t_enter = texts.enter().append('text')
+
+        texts.merge(t_enter)
+          .style('opacity','0')
+          .attr('font-size',20)
+          .attr("x", function(d) {
+
+            if (this.getAttribute('x')) {
+              return this.getAttribute('x')
+            } else {
+              return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;
+            }
+
+          })
+          .attr("y", function(d) {
+            if (this.getAttribute('y')) {
+              return this.getAttribute('y')
+            } else {
+              return this2.y(d[this2.keyValue]) - 10;
+            }
+          })
+          .transition()
+          .duration(1000)
+          .style('opacity','1')
+          .text(function(d) {
+            return d[this2.keyValue];
+          })
+          .attr("x", function(d) {
+            return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;
+          })
+          .attr("y", function(d) {
+            return this2.y(d[this2.keyValue]) - 10;
+          })
+
+      }
+
+
     }
   },
   watch: {

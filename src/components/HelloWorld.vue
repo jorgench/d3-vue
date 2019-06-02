@@ -26,7 +26,7 @@
         <h2 class="card-title">Line Chart</h2>
 
         <div class="chart-container">
-          <d3-line :value="parserData" keyLabel="name"></d3-line>
+          <d3-line :dots="true" :text="true" :value="parserData" keyLabel="name"></d3-line>
         </div>
       </div>
     </div>
