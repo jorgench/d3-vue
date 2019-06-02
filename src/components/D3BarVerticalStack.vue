@@ -233,11 +233,9 @@ export default {
         .transition()
         .duration(1000)
         .attr("y", function(d, i) {
-          console.log("Funcion de Y", d);
           return self.y(yDominios[i]);
         })
         .attr("x", function(d) {
-          console.log("data x: ", d);
           return self.x(d[0]);
         })
         .attr(

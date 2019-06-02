@@ -50,8 +50,6 @@ export default {
     };
   },
   created() {
-    console.log("Se recreo el componente");
-
     this.radius = Math.min(this.width, this.height) / 2;
   },
   mounted() {
@@ -91,7 +89,6 @@ export default {
         .arc()
         .innerRadius(this.radius * 0.9)
         .outerRadius(this.radius * 0.9);
-      console.log("llamada a outerArc: ", arc);
       return arc(b);
     },
     drawChart() {
