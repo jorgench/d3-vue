@@ -117,21 +117,21 @@ export default {
 
       if (this.dots) {
         this.g
-        .append('g')
-        .attr("class", "dots")
-        .attr(
-          "transform",
-          "translate(" + this2.margin.left + "," + this2.margin.top + ")"
-        );
+          .append("g")
+          .attr("class", "dots")
+          .attr(
+            "transform",
+            "translate(" + this2.margin.left + "," + this2.margin.top + ")"
+          );
       }
       if (this.text) {
         this.g
-        .append('g')
-        .attr("class","leyeds")
-        .attr(
-          "transform",
-          "translate(" + this2.margin.left + "," + this2.margin.top + ")"
-        );
+          .append("g")
+          .attr("class", "leyeds")
+          .attr(
+            "transform",
+            "translate(" + this2.margin.left + "," + this2.margin.top + ")"
+          );
       }
 
       this.updateCharts();
@@ -187,37 +187,38 @@ export default {
 
       if (this.dots) {
         let dots = this.g
-        .select("g.dots")
-        .selectAll(".dot")
-        .data(this.value)
+          .select("g.dots")
+          .selectAll(".dot")
+          .data(this.value);
 
-        dots.exit().remove()
+        dots.exit().remove();
 
-        let d_enter = dots.enter()
+        let d_enter = dots
+          .enter()
           .append("circle")
-          .attr("class", "dot")
-        
+          .attr("class", "dot");
 
-        dots.merge(d_enter)
-          .attr("r",function() {
+        dots
+          .merge(d_enter)
+          .attr("r", function() {
             if (this.getAttribute("r")) {
-              return this.getAttribute("r")
+              return this.getAttribute("r");
             } else {
               return 0;
             }
           })
           .attr("cx", function(d) {
             if (this.getAttribute("cx")) {
-              return this.getAttribute("cx")
+              return this.getAttribute("cx");
             } else {
-              return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;;
+              return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;
             }
           })
           .attr("cy", function(d) {
             if (this.getAttribute("cy")) {
-              return this.getAttribute("cy")
+              return this.getAttribute("cy");
             } else {
-              return this2.y(d[this2.keyValue]);  
+              return this2.y(d[this2.keyValue]);
             }
           })
           .transition()
@@ -228,42 +229,40 @@ export default {
           })
           .attr("cy", function(d, i) {
             return this2.y(d[this2.keyValue]);
-          })
+          });
       }
 
       if (this.text) {
-
         let texts = this.g
           .select("g.leyeds")
           .selectAll("text")
-          .data(this.value)
+          .data(this.value);
 
-        texts.exit().remove()
+        texts.exit().remove();
 
-        let t_enter = texts.enter().append('text')
+        let t_enter = texts.enter().append("text");
 
-        texts.merge(t_enter)
-          .style('opacity','0')
-          .attr('font-size',20)
+        texts
+          .merge(t_enter)
+          .style("opacity", "0")
+          .attr("font-size", 30)
           .attr("x", function(d) {
-
-            if (this.getAttribute('x')) {
-              return this.getAttribute('x')
+            if (this.getAttribute("x")) {
+              return this.getAttribute("x");
             } else {
               return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;
             }
-
           })
           .attr("y", function(d) {
-            if (this.getAttribute('y')) {
-              return this.getAttribute('y')
+            if (this.getAttribute("y")) {
+              return this.getAttribute("y");
             } else {
               return this2.y(d[this2.keyValue]) - 10;
             }
           })
           .transition()
           .duration(1000)
-          .style('opacity','1')
+          .style("opacity", "1")
           .text(function(d) {
             return d[this2.keyValue];
           })
@@ -272,11 +271,8 @@ export default {
           })
           .attr("y", function(d) {
             return this2.y(d[this2.keyValue]) - 10;
-          })
-
+          });
       }
-
-
     }
   },
   watch: {

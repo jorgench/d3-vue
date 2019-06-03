@@ -41,7 +41,7 @@ export default {
     colors: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     }
   },
@@ -168,9 +168,8 @@ export default {
         .append("g")
         .classed("layer", true)
         .attr("fill", function(d) {
-          
           if (self.colors.length > 0) {
-            return self.colors[arguments[1]]
+            return self.colors[arguments[1]];
           }
 
           return colors[arguments[1]];
@@ -229,7 +228,7 @@ export default {
             return d;
           },
           function(e) {
-            console.log('E: ', e)
+            console.log("E: ", e);
             return e.data[self.keyLabel];
           }
         );
@@ -261,15 +260,14 @@ export default {
         )
         .attr("fill", "#000")
         .text(function(d, i) {
-          
           if (serie < self.keysValue.length) {
             serie += 1;
-            return self.value[i][self.keysValue[key]]
+            return self.value[serie - 1][self.keysValue[key]];
           } else {
-            let temp = self.value[i][self.keysValue[key]]
+            let temp = self.value[serie - 1][self.keysValue[key]];
             serie = 0;
             key += 1;
-            return temp
+            return temp;
           }
         });
     }
