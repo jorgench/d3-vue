@@ -1,7 +1,7 @@
 <template>
   <div ref="all">
     <div data-def="tooltip" style="pointer-events: none;position: absolute; transform: traslateY(-100%); max-width: 8rem;">
-      <slot name="tooltip">
+      <slot name="tooltip" :data="dataSelected">
       </slot>
     </div>
     <svg ref="svg" :viewBox="viewBox" preserveAspectRatio="xMidYMid meet"></svg>
@@ -46,7 +46,8 @@ export default {
         right: 15,
         bottom: 30,
         left: 130
-      }
+      },
+      dataSelected: {}
     };
   },
   computed: {

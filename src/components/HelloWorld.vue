@@ -5,7 +5,7 @@
         <h2 class="card-title">Donunt Chart</h2>
 
         <div class="chart-container">
-          <d3-donut :height="960 " :thickness="90" :value="parserData"/>
+          <d3-donut :height="960 " :thickness="90" keyColor="color" :value="parserData"/>
         </div>
         <div class="controls">
           <div v-for="item,key in paises" :key="key">
@@ -36,7 +36,11 @@
         <h2 class="card-title">Bar Horizontal Chart</h2>
 
         <div class="chart-container">
-          <d3-bar-vertical :value="parserData" keyLabel="name" @select="select"/>
+          <d3-bar-vertical :value="parserData" keyLabel="name" @select="select">
+            <div slot="tooltip" slot-scope="tooltip">
+              {{tooltip.data}}
+            </div>
+          </d3-bar-vertical>
         </div>
       </div>
     </div>
@@ -93,6 +97,7 @@
             keyLabel="name"
             :keysValue="['value','value2','value3']"
             :value="parserData"
+            :colors="['#3d5a80','#98c1d9','#e0fbfc']"
           ></d3-bar-vertical-stack>
         </div>
       </div>
@@ -124,10 +129,10 @@ export default {
   data() {
     return {
       paises: [
-        { name: "USA", value: 95, value2: 120, value3: 14, active: true },
-        { name: "UK", value: 20, value2: 450, value3: 52, active: true },
-        { name: "Canada", value: 30, value2: 142, value3: 68, active: true },
-        { name: "Mexico", value: 10, value2: 240, value3: 100, active: true }
+        { name: "USA", value: 95, value2: 120, value3: 14, color: '#3d5a80', active: true },
+        { name: "UK", value: 20, value2: 450, value3: 52, color: '#98c1d9', active: true },
+        { name: "Canada", value: 30, value2: 142, value3: 68, color: '#e0fbfc', active: true },
+        { name: "Mexico", value: 10, value2: 240, value3: 100, color: '#ee6c4d', active: true }
       ]
     };
   },
