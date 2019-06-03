@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div ref="all">
+    <div data-def="tooltip" style="pointer-events: none;position: absolute; transform: traslateY(-100%); max-width: 8rem;">
+      <slot name="tooltip">
+      </slot>
+    </div>
     <svg ref="svg" :viewBox="viewBox" perserveAspectRatio="xMidYMid meet"></svg>
-    <div ref="d3container"></div>
   </div>
 </template>
 
@@ -117,6 +120,9 @@ export default {
         return d[self.keyValue];
       });
 
+      let tooltip = d3.select(this.$refs.all).select("div[data-def='tooltip']")
+      tooltip.style('opacity', 0)
+
       this.y.domain([0, self.maxValue]);
 
       this.x.domain(
@@ -124,6 +130,7 @@ export default {
           return d[self.keyLabel] ? d[self.keyLabel] : "";
         })
       );
+
       this.g
         .select(".x.axis")
         .transition()
@@ -228,7 +235,36 @@ export default {
         .attr("width", self.x.bandwidth(), 40)
         .attr("x", function(d) {
           return self.x(d[self.keyLabel]);
-        });
+        })
+        .on('mouseover', function(d) {
+          let coord = self.$refs.all.getBoundingClientRect()
+
+          let staticY = window.scrollY + coord.top
+          let staticX = window.scrollX + coord.left
+          
+          tooltip
+            .transition()
+            .duration(200)
+            .style('opacity','1')
+            .style("top", (d3.event.pageY - staticY) + 'px')
+            .style("left", (d3.event.pageX - staticX) + 'px')
+        })
+        .on('mousemove', function() {
+          let coord = self.$refs.all.getBoundingClientRect()
+
+          let staticY = window.scrollY + coord.top
+          let staticX = window.scrollX + coord.left
+
+          tooltip
+            .style("top", (d3.event.pageY - staticY) + 'px')
+            .style("left", (d3.event.pageX - staticX) + 'px')
+        })
+        .on('mouseout', function(d) {
+          tooltip
+            .transition()
+            .duration(500)
+            .style("opacity", 0)
+        })
 
       //enter + update
       bars
