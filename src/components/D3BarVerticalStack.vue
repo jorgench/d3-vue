@@ -37,6 +37,12 @@ export default {
     fill: {
       type: String,
       default: "#0E73CA"
+    },
+    colors: {
+      type: Array,
+      default() {
+        return []
+      }
     }
   },
   data() {
@@ -162,6 +168,11 @@ export default {
         .append("g")
         .classed("layer", true)
         .attr("fill", function(d) {
+          
+          if (self.colors.length > 0) {
+            return self.colors[arguments[1]]
+          }
+
           return colors[arguments[1]];
         })
         .attr(
@@ -218,12 +229,14 @@ export default {
             return d;
           },
           function(e) {
+            console.log('E: ', e)
             return e.data[self.keyLabel];
           }
         );
 
       texts.exit().remove();
       let serie = 0;
+      let key = 0;
 
       texts
         .enter()
@@ -248,9 +261,16 @@ export default {
         )
         .attr("fill", "#000")
         .text(function(d, i) {
-          /*console.log("D text: " + i, self.value[i][self.keysValue[serie]]);
-          serie++;
-          return self.value[i][self.keysValue[serie]];*/
+          
+          if (serie < self.keysValue.length) {
+            serie += 1;
+            return self.value[i][self.keysValue[key]]
+          } else {
+            let temp = self.value[i][self.keysValue[key]]
+            serie = 0;
+            key += 1;
+            return temp
+          }
         });
     }
   },

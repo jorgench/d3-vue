@@ -25,6 +25,10 @@ export default {
       type: String,
       default: "value"
     },
+    keyColor: {
+      type: String,
+      default: ""
+    },
     subtitle: {
       type: String,
       default: "contactos"
@@ -140,6 +144,9 @@ export default {
         .append("path")
         .attr("d", this.arc)
         .attr("fill", (d, i) => {
+          if (self.keyColor !== "") {
+            return d.data[self.keyColor]
+          } 
           return self.probarCodigo(i);
         })
         .each(function(d, i) {
