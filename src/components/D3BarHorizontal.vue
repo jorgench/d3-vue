@@ -1,7 +1,7 @@
 <template>
   <div ref="all">
     <div data-def="tooltip" style="pointer-events: none;position: absolute; transform: traslateY(-100%); max-width: 8rem;">
-      <slot name="tooltip">
+      <slot name="tooltip" data="dataSelected">
       </slot>
     </div>
     <svg ref="svg" :viewBox="viewBox" perserveAspectRatio="xMidYMid meet"></svg>
@@ -51,7 +51,8 @@ export default {
         right: 15,
         bottom: 30,
         left: 130
-      }
+      },
+      dataSelected: {}
     };
   },
   computed: {
@@ -248,6 +249,8 @@ export default {
             .style('opacity','1')
             .style("top", (d3.event.pageY - staticY) + 'px')
             .style("left", (d3.event.pageX - staticX) + 'px')
+
+            self.dataSelected = d
         })
         .on('mousemove', function() {
           let coord = self.$refs.all.getBoundingClientRect()

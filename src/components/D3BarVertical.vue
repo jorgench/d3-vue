@@ -185,6 +185,8 @@ export default {
             .style('opacity','1')
             .style("top", (d3.event.pageY - staticY) + 'px')
             .style("left", (d3.event.pageX - staticX) + 'px')
+
+          self.dataSelected = d
         })
         .on('mousemove', function() {
           let coord = self.$refs.all.getBoundingClientRect()
