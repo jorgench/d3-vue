@@ -260,13 +260,13 @@ export default {
         )
         .attr("fill", "#000")
         .text(function(d, i) {
-          if (serie < self.keysValue.length) {
+          if (serie < self.value.length) {
             serie += 1;
             return self.value[serie - 1][self.keysValue[key]];
           } else {
-            let temp = self.value[serie - 1][self.keysValue[key]];
-            serie = 0;
+            serie = 1;
             key += 1;
+            let temp = self.value[serie - 1][self.keysValue[key]];
             return temp;
           }
         });

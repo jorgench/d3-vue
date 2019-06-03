@@ -1,8 +1,10 @@
 <template>
   <div ref="all">
-    <div data-def="tooltip" style="pointer-events: none;position: absolute; transform: traslateY(-100%); max-width: 8rem;">
-      <slot name="tooltip" :data="dataSelected">
-      </slot>
+    <div
+      data-def="tooltip"
+      style="pointer-events: none;position: absolute; transform: traslateY(-100%); max-width: 8rem;"
+    >
+      <slot name="tooltip" :data="dataSelected"></slot>
     </div>
     <svg ref="svg" :viewBox="viewBox" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
@@ -36,17 +38,22 @@ export default {
     fill: {
       type: String,
       default: "#0E73CA"
+    },
+    margin: {
+      type: Object,
+      default() {
+        return {
+          top: 30,
+          right: 15,
+          bottom: 30,
+          left: 130
+        };
+      }
     }
   },
   data() {
     return {
       g: {},
-      margin: {
-        top: 30,
-        right: 15,
-        bottom: 30,
-        left: 130
-      },
       dataSelected: {}
     };
   },
@@ -116,8 +123,8 @@ export default {
         return d[self.keyValue];
       });
 
-      let tooltip = d3.select(this.$refs.all).select("div[data-def='tooltip']")
-      tooltip.style('opacity', 0)
+      let tooltip = d3.select(this.$refs.all).select("div[data-def='tooltip']");
+      tooltip.style("opacity", 0);
 
       this.x.domain([0, self.maxValue]);
 
@@ -174,36 +181,36 @@ export default {
         .attr("y", function(d) {
           return self.y(d[self.keyLabel]);
         })
-        .on('mouseover', function(d) {
-          let coord = self.$refs.all.getBoundingClientRect()
+        .on("mouseover", function(d) {
+          let coord = self.$refs.all.getBoundingClientRect();
 
-          let staticY = window.scrollY + coord.top
-          let staticX = window.scrollX + coord.left
-          
+          let staticY = window.scrollY + coord.top;
+          let staticX = window.scrollX + coord.left;
+
           tooltip
             .transition()
             .duration(200)
-            .style('opacity','1')
-            .style("top", (d3.event.pageY - staticY) + 'px')
-            .style("left", (d3.event.pageX - staticX) + 'px')
+            .style("opacity", "1")
+            .style("top", d3.event.pageY - staticY + "px")
+            .style("left", d3.event.pageX - staticX + "px");
 
-          self.dataSelected = d
+          self.dataSelected = d;
         })
-        .on('mousemove', function() {
-          let coord = self.$refs.all.getBoundingClientRect()
+        .on("mousemove", function() {
+          let coord = self.$refs.all.getBoundingClientRect();
 
-          let staticY = window.scrollY + coord.top
-          let staticX = window.scrollX + coord.left
+          let staticY = window.scrollY + coord.top;
+          let staticX = window.scrollX + coord.left;
 
           tooltip
-            .style("top", (d3.event.pageY - staticY) + 'px')
-            .style("left", (d3.event.pageX - staticX) + 'px')
+            .style("top", d3.event.pageY - staticY + "px")
+            .style("left", d3.event.pageX - staticX + "px");
         })
-        .on('mouseout', function() {
+        .on("mouseout", function() {
           tooltip
             .transition()
             .duration(500)
-            .style("opacity", 0)
+            .style("opacity", 0);
         });
 
       let t_enter = texts
@@ -228,7 +235,7 @@ export default {
           return self.y(d[self.keyLabel]);
         })
         .attr("height", self.y.bandwidth())
-        .attr("fill", this.fill)
+        .attr("fill", this.fill);
 
       texts
         .merge(t_enter)

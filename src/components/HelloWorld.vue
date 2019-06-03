@@ -9,7 +9,7 @@
         </div>
         <div class="controls">
           <div v-for="item,key in paises" :key="key">
-            <label for>{{item.name}}</label>
+            <label for>{{item.name}} {{item.value}}</label>
             <input type="checkbox" v-model="item.active">
             <input type="range" min="0" max="100" step="1" v-model="paises[key].value">
           </div>
@@ -37,9 +37,7 @@
 
         <div class="chart-container">
           <d3-bar-vertical :value="parserData" keyLabel="name" @select="select">
-            <div slot="tooltip" slot-scope="tooltip">
-              {{tooltip.data}}
-            </div>
+            <div slot="tooltip" slot-scope="tooltip">{{tooltip.data}}</div>
           </d3-bar-vertical>
         </div>
       </div>
@@ -73,7 +71,7 @@
         <div class="card-container">
           <div class="controls">
             <div v-for="item,key in paises" :key="key">
-              <label for>{{item.name}}</label>
+              <label for>{{item.name}} {{item.value2}}</label>
               <input type="checkbox" v-model="item.active">
               <input type="range" min="0" max="100" step="1" v-model="paises[key].value2">
             </div>
@@ -81,7 +79,7 @@
           <hr>
           <div class="controls">
             <div v-for="item,key in paises" :key="key">
-              <label for>{{item.name}}</label>
+              <label for>{{item.name}} {{item.value3}}</label>
               <input type="checkbox" v-model="item.active">
               <input type="range" min="0" max="100" step="1" v-model="paises[key].value3">
             </div>
@@ -129,10 +127,38 @@ export default {
   data() {
     return {
       paises: [
-        { name: "USA", value: 95, value2: 120, value3: 14, color: '#3d5a80', active: true },
-        { name: "UK", value: 20, value2: 450, value3: 52, color: '#98c1d9', active: true },
-        { name: "Canada", value: 30, value2: 142, value3: 68, color: '#e0fbfc', active: true },
-        { name: "Mexico", value: 10, value2: 240, value3: 100, color: '#ee6c4d', active: true }
+        {
+          name: "USA",
+          value: 95,
+          value2: 120,
+          value3: 14,
+          color: "#3d5a80",
+          active: true
+        },
+        {
+          name: "UK",
+          value: 20,
+          value2: 450,
+          value3: 52,
+          color: "#98c1d9",
+          active: true
+        },
+        {
+          name: "Canada",
+          value: 30,
+          value2: 142,
+          value3: 68,
+          color: "#e0fbfc",
+          active: true
+        },
+        {
+          name: "Mexico",
+          value: 10,
+          value2: 240,
+          value3: 100,
+          color: "#ee6c4d",
+          active: true
+        }
       ]
     };
   },
