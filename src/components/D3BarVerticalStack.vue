@@ -6,8 +6,8 @@
 
 <script>
 import * as d3 from "d3";
-import globalMixin from "@/mixins/global";
-import stackMixin from "@/mixins/stack";
+import globalMixin from "../mixins/global";
+import stackMixin from "../mixins/stack";
 
 export default {
   name: "D3BarVerticalStack",

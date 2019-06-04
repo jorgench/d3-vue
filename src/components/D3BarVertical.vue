@@ -11,7 +11,7 @@
 </template>
 <script>
 import * as d3 from "d3";
-import globalMixin from "@/mixins/global";
+import globalMixin from "../mixins/global";
 
 export default {
   name: "D3BarVertical",
