@@ -11,16 +11,12 @@
 
 <script>
 import * as d3 from "d3";
+import globalMixin from "@/mixins/global";
 
 export default {
   name: "D3Donut",
+  mixins: [globalMixin],
   props: {
-    value: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
     keyValue: {
       type: String,
       default: "value"
@@ -33,14 +29,6 @@ export default {
       type: String,
       default: "contactos"
     },
-    width: {
-      type: Number,
-      default: 960
-    },
-    height: {
-      type: Number,
-      default: 450
-    },
     thickness: {
       type: Number,
       default: 40
@@ -48,16 +36,9 @@ export default {
   },
   data() {
     return {
-      radius: 0,
       paths: [],
       g: {}
     };
-  },
-  created() {
-    this.radius = Math.min(this.width, this.height) / 2;
-  },
-  mounted() {
-    this.drawChart();
   },
   computed: {
     totalValue() {
@@ -67,8 +48,8 @@ export default {
       });
       return total;
     },
-    viewBox() {
-      return "0 0 " + this.width + " " + this.height;
+    radius() {
+      return Math.min(this.width, this.height) / 2;
     }
   },
   methods: {
@@ -145,8 +126,8 @@ export default {
         .attr("d", this.arc)
         .attr("fill", (d, i) => {
           if (self.keyColor !== "") {
-            return d.data[self.keyColor]
-          } 
+            return d.data[self.keyColor];
+          }
           return self.probarCodigo(i);
         })
         .each(function(d, i) {
@@ -159,13 +140,6 @@ export default {
       return d3
         .scaleOrdinal(d3.schemeCategory10)
         .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])(j);
-    }
-  },
-  watch: {
-    value(oldValue, newValue) {
-      if (oldValue != newValue) {
-        this.updateCharts();
-      }
     }
   }
 };

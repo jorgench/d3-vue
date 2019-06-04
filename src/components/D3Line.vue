@@ -5,16 +5,12 @@
 </template>
 <script>
 import * as d3 from "d3";
+import globalMixin from "@/mixins/global";
 
 export default {
   name: "D3Line",
+  mixins: [globalMixin],
   props: {
-    value: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
     keyValue: {
       type: String,
       default: "value"
@@ -22,14 +18,6 @@ export default {
     keyLabel: {
       type: String,
       default: "label"
-    },
-    width: {
-      type: Number,
-      default: 960
-    },
-    height: {
-      type: Number,
-      default: 450
     },
     dots: {
       type: Boolean,
@@ -42,28 +30,8 @@ export default {
   },
   data() {
     return {
-      g: {},
-      margin: {
-        top: 30,
-        right: 15,
-        bottom: 30,
-        left: 130
-      }
+      g: {}
     };
-  },
-  computed: {
-    viewBox() {
-      return "0 0 " + this.width + " " + this.height;
-    },
-    realW() {
-      return this.width - this.margin.left - this.margin.right;
-    },
-    realH() {
-      return this.height - this.margin.top - this.margin.bottom;
-    }
-  },
-  mounted() {
-    this.drawChart();
   },
   methods: {
     drawChart() {
@@ -272,13 +240,6 @@ export default {
           .attr("y", function(d) {
             return this2.y(d[this2.keyValue]) - 10;
           });
-      }
-    }
-  },
-  watch: {
-    value(oldValue, newValue) {
-      if (oldValue != newValue) {
-        this.updateCharts();
       }
     }
   }
