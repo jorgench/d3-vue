@@ -8,21 +8,12 @@
 <script>
 import * as d3 from "d3";
 import globalMixin from "@/mixins/global";
+import stackMixin from "@/mixins/stack";
 
 export default {
   name: "D3BarHorizontalStack",
-  mixins: [globalMixin],
+  mixins: [globalMixin, stackMixin],
   props: {
-    keysValue: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    keyLabel: {
-      type: String,
-      default: "label"
-    },
     fill: {
       type: String,
       default: "#0E73CA"
@@ -192,6 +183,9 @@ export default {
         .append("g")
         .classed("layer", true)
         .attr("fill", function(d) {
+          if (self.colors.length > 0) {
+            return self.colors[arguments[1]];
+          }
           return colors[arguments[1]];
         })
         .attr(

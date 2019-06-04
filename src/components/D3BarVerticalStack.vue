@@ -7,30 +7,15 @@
 <script>
 import * as d3 from "d3";
 import globalMixin from "@/mixins/global";
+import stackMixin from "@/mixins/stack";
 
 export default {
   name: "D3BarVerticalStack",
-  mixins: [globalMixin],
+  mixins: [globalMixin, stackMixin],
   props: {
-    keysValue: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    keyLabel: {
-      type: String,
-      default: "label"
-    },
     fill: {
       type: String,
       default: "#0E73CA"
-    },
-    colors: {
-      type: Array,
-      default() {
-        return [];
-      }
     }
   },
   data() {
@@ -139,7 +124,6 @@ export default {
           if (self.colors.length > 0) {
             return self.colors[arguments[1]];
           }
-
           return colors[arguments[1]];
         })
         .attr(
@@ -196,7 +180,6 @@ export default {
             return d;
           },
           function(e) {
-            console.log("E: ", e);
             return e.data[self.keyLabel];
           }
         );
