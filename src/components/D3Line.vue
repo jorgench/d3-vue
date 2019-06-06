@@ -135,6 +135,8 @@ export default {
       if (this.rotateAxisX > 0) {
         xAxis
           .style("text-anchor", "end")
+          .attr("dx", "-10")
+          .attr("dy", "2")
           .attr("transform", "rotate(" + this.rotateAxisX * -1 + ")");
       }
 
