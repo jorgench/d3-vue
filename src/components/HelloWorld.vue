@@ -5,7 +5,7 @@
         <h2 class="card-title">Donunt Chart</h2>
 
         <div class="chart-container">
-          <d3-donut :height="960 " :thickness="90" keyColor="color" :value="parserData"/>
+          <d3-donut :height="960" :thickness="90" keyColor="color" :value="parserData"/>
         </div>
         <div class="controls">
           <div v-for="item,key in paises" :key="key">
@@ -26,7 +26,7 @@
         <h2 class="card-title">Line Chart</h2>
 
         <div class="chart-container">
-          <d3-line :dots="true" :text="true" :value="parserData" keyLabel="name"></d3-line>
+          <d3-line :dots="true" :text="true" :value="parserData" keyLabel="name" :rotateAxisX="20"></d3-line>
         </div>
       </div>
     </div>

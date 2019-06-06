@@ -26,6 +26,10 @@ export default {
     text: {
       type: Boolean,
       default: false
+    },
+    rotateAxisX: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -127,6 +131,13 @@ export default {
         .call(d3.axisBottom(this.x))
         .selectAll("text")
         .attr("font-size", 20);
+
+      if (this.rotateAxisX > 0) {
+        xAxis
+          .style("text-anchor", "end")
+          .attr("transform", "rotate(" + this.rotateAxisX * -1 + ")");
+      }
+
       let yAxis = this.g
         .select(".y.axis")
         .transition()

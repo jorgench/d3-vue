@@ -101,7 +101,13 @@ export default {
       let p = this.g
         .select(".slices")
         .selectAll("path")
-        .data(self.pie(self.value));
+        .data(self.pie(self.value))
+        .attr("fill", (d, i) => {
+          if (self.keyColor !== "") {
+            return d.data[self.keyColor];
+          }
+          return self.probarCodigo(i);
+        });
 
       p.transition()
         .duration(1000)
