@@ -24,6 +24,14 @@ export default {
           left: 130
         };
       }
+    },
+    preLabel: {
+      type: String,
+      default: ""
+    },
+    posLabel: {
+      type: String,
+      default: ""
     }
   },
   computed: {

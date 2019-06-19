@@ -245,7 +245,7 @@ export default {
           .duration(1000)
           .style("opacity", "1")
           .text(function(d) {
-            return d[this2.keyValue];
+            return this2.preLabel + d[this2.keyValue] + this2.posLabel;
           })
           .attr("x", function(d) {
             return this2.x(d[this2.keyLabel]) + this2.x.bandwidth() / 2;

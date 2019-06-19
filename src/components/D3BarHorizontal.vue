@@ -193,22 +193,6 @@ export default {
       let bars = d3
         .select(this.$refs.svg)
         .select("g.global")
-        .selectAll("rect.bar")
-        .data(self.value);
-
-      //remove
-      bars.exit().remove();
-
-      //enter
-      let r_enter = bars
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("height", 0)
-        .attr("width", self.x.bandwidth(), 40)
-        .attr("x", function(d) {
-          return self.x(d[self.keyLabel]);
-        })
         .on("mouseover", function(d) {
           let coord = self.$refs.all.getBoundingClientRect();
 
@@ -239,6 +223,22 @@ export default {
             .transition()
             .duration(500)
             .style("opacity", 0);
+        })
+        .selectAll("rect.bar")
+        .data(self.value);
+
+      //remove
+      bars.exit().remove();
+
+      //enter
+      let r_enter = bars
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("height", 0)
+        .attr("width", self.x.bandwidth(), 40)
+        .attr("x", function(d) {
+          return self.x(d[self.keyLabel]);
         });
 
       //enter + update

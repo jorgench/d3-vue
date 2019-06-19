@@ -139,13 +139,6 @@ export default {
       let r_enter = bars
         .enter()
         .append("g")
-        .append("rect")
-        .attr("class", "bar")
-        .attr("height", self.y.bandwidth(), 40)
-        .attr("width", 0)
-        .attr("y", function(d) {
-          return self.y(d[self.keyLabel]);
-        })
         .on("mouseover", function(d) {
           let coord = self.$refs.all.getBoundingClientRect();
 
@@ -176,6 +169,13 @@ export default {
             .transition()
             .duration(500)
             .style("opacity", 0);
+        })
+        .append("rect")
+        .attr("class", "bar")
+        .attr("height", self.y.bandwidth(), 40)
+        .attr("width", 0)
+        .attr("y", function(d) {
+          return self.y(d[self.keyLabel]);
         });
 
       let t_enter = texts
@@ -220,7 +220,7 @@ export default {
         )
         .attr("font-size", "24")
         .text(function(d) {
-          return d[self.keyValue];
+          return self.preLabel + d[self.keyValue] + self.posLabel;
         });
 
       /* interactividad */

@@ -211,15 +211,18 @@ export default {
         )
         .attr("fill", "#000")
         .text(function(d, i) {
+          let tempLabel = "";
+
           if (serie < self.value.length) {
             serie += 1;
-            return self.value[serie - 1][self.keysValue[key]];
+            tempLabel = self.value[serie - 1][self.keysValue[key]];
           } else {
             serie = 1;
             key += 1;
-            let temp = self.value[serie - 1][self.keysValue[key]];
-            return temp;
+            tempLabel = self.value[serie - 1][self.keysValue[key]];
           }
+
+          return self.preLabel + tempLabel + self.posLabel;
         });
     }
   }
